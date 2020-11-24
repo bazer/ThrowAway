@@ -112,7 +112,7 @@ namespace ThrowAway.Tests
         [Fact]
         public void SomeNull()
         {
-            Assert.Throws<ArgumentNullException>(() => Some<string>(null));
+            Assert.Throws<ValueIsNullException>(() => Some<string>(null));
         }
 
         [Fact]
@@ -122,6 +122,15 @@ namespace ThrowAway.Tests
             var some = Some(none);
             Assert.True(some.HasValue);
             Assert.False(some.Value.HasValue);
+        }
+
+        [Fact]
+        public void SomeInsideSome()
+        {
+            var innerSome = Some("123");
+            var some = Some(innerSome);
+            Assert.True(some.HasValue);
+            Assert.True(some.Value.HasValue);
         }
 
         [Fact]
@@ -137,7 +146,7 @@ namespace ThrowAway.Tests
         public void NullableNone()
         {
             int? nullable = null;
-            Assert.Throws<ArgumentNullException>(() => Some(nullable));
+            Assert.Throws<ValueIsNullException>(() => Some(nullable));
         }
 
         [Fact]

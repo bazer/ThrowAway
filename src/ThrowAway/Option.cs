@@ -21,7 +21,7 @@ namespace ThrowAway
         public readonly bool HasValue { get; }
         public T Value => HasValue
            ? value
-           : throw new NoneException();
+           : throw new NoneException("The option has no value");
 
         private Option(T value, bool hasValue)
         {
@@ -32,7 +32,7 @@ namespace ThrowAway
         public static Option<T> Some(T value)
         {
             if (IsNull(value))
-                throw new ArgumentNullException(nameof(value), "'Some' cannot be called with a 'null' value");
+                throw new ValueIsNullException("'Some' cannot be called with a 'null' value");
 
             return new Option<T>(value, true);
         }
