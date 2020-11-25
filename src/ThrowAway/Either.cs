@@ -10,8 +10,19 @@ namespace ThrowAway
         Value = 2
     }
 
-    class Either
+    public class Either
     {
+        public static Either<V, F> Some<V, F>(V value) =>
+            Either<V, F>.Some(value);
+
+        public static Either<V, F> Fail<V, F>(F failure) =>
+            Either<V, F>.Fail(failure);
+
+        //public static Option<Nothing> None() =>
+        //    Option<Nothing>.None;
+
+        //public static Option<T> None<T>() =>
+        //    Option<T>.None;
     }
 
     public readonly struct Either<V, F>
@@ -51,7 +62,7 @@ namespace ThrowAway
             this.failure = failure;
             this.state = state;
         }
-
+        
         public static Either<V, F> Some(V value)
         {
             if (IsNull(value))
@@ -70,6 +81,11 @@ namespace ThrowAway
 
         public static Either<V, F> None
             => new Either<V, F>(default, default, EitherState.None);
+
+        public static implicit operator V(Either<V, F> option) => option.Value;
+        public static implicit operator Either<V, F>(V value) => IsNull(value)
+            ? None
+            : Some(value);
 
         public override string ToString() => state switch
         {
