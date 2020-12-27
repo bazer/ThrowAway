@@ -38,28 +38,28 @@ namespace ThrowAway.Tests
         [Fact]
         public void NoneValueType()
         {
-            var test = Option<int>.None;
+            var test = Option<int>.Fail("fail");
 
             Assert.False(test.HasValue);
-            Assert.Throws<NoneException>(() => test.Value);
+            Assert.Throws<HasFailedException<string>>(() => test.Value);
         }
 
         [Fact]
         public void NoneTest()
         {
-            var test = Option.None();
+            var test = Option.Fail("fail");
 
             Assert.False(test.HasValue);
-            Assert.Throws<NoneException>(() => test.Value);
+            Assert.Throws<HasFailedException<string>>(() => test.Value);
         }
 
         [Fact]
         public void NoneStatic()
         {
-            var test = None();
+            var test = Fail("fail");
 
             Assert.False(test.HasValue);
-            Assert.Throws<NoneException>(() => test.Value);
+            Assert.Throws<HasFailedException<string>>(() => test.Value);
         }
 
         [Fact]
@@ -86,27 +86,13 @@ namespace ThrowAway.Tests
         [Fact]
         public void NoneImplicitFrom()
         {
-            Assert.Throws<NoneException>(() => { string test = None<string>(); });
-        }
-
-        [Fact]
-        public void NoneImplicitTo()
-        {
-            Option<string> none = null;
-            Assert.False(none.HasValue);
+            Assert.Throws<HasFailedException<string>>(() => { string test = Fail<string>("fail"); });
         }
 
         [Fact]
         public void NoneExplicitFrom()
         {
-            Assert.Throws<NoneException>(() => (string)None<string>());
-        }
-
-        [Fact]
-        public void NoneExplicitTo()
-        {
-            var none = (Option<string>)null;
-            Assert.False(none.HasValue);
+            Assert.Throws<HasFailedException<string>>(() => (string)Fail<string>("fail"));
         }
 
         [Fact]
@@ -118,7 +104,7 @@ namespace ThrowAway.Tests
         [Fact]
         public void NoneInsideSome()
         {
-            var none = (Option<string>)null;
+            var none = Fail("fail");
             var some = Some(none);
             Assert.True(some.HasValue);
             Assert.False(some.Value.HasValue);
@@ -158,7 +144,23 @@ namespace ThrowAway.Tests
         [Fact]
         public void NoneToString()
         {
-            Assert.Equal("None", None().ToString());
+            Assert.Equal("fail", Fail("fail").ToString());
+        }
+
+        [Fact]
+        public void SomeStringImplicitTo()
+        {
+            Option<string> some = Some("value");
+            Assert.True(some.HasValue);
+            Assert.Equal("value", some);
+        }
+
+        [Fact]
+        public void FailStringImplicitTo()
+        {
+            Option<string> some = Fail("fail");
+            Assert.False(some.HasValue);
+            Assert.Equal("fail", some.Failure);
         }
     }
 }

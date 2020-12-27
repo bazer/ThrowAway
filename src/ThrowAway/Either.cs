@@ -10,10 +10,13 @@ namespace ThrowAway
         Value = 2
     }
 
-    public class Either
+    public static class Either
     {
         public static Either<V, F> Some<V, F>(V value) =>
             Either<V, F>.Some(value);
+
+        public static Either<V, string> SomeString<V>(V value) =>
+            Either<V, string>.Some(value);
 
         public static Either<V, F> Fail<V, F>(F failure) =>
             Either<V, F>.Fail(failure);
@@ -23,44 +26,61 @@ namespace ThrowAway
 
         //public static Option<T> None<T>() =>
         //    Option<T>.None;
+
+        public static Either<V, F> Catch<V, F>(Func<Either<V, F>> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch (HasFailedException<F> e)
+            {
+                return e.Failure;
+            }
+        }
     }
 
     public readonly struct Either<V, F>
     {
         private readonly V value;
         private readonly F failure;
-        private readonly EitherState state;
+        public readonly EitherState State;
 
         public bool HasValue =>
-            state == EitherState.Value;
+            State == EitherState.Value;
 
         public bool HasFailed =>
-            state == EitherState.Failed;
+            State == EitherState.Failed;
 
         public bool HasNone =>
-            state == EitherState.None;
+            State == EitherState.None;
 
-        public V Value => state switch
+        public V Value => State switch
         {
             EitherState.Value => value,
-            EitherState.Failed => throw new FailException("The either has failed"),
+            EitherState.Failed => throw new HasFailedException<F>("The either has failed with", failure),
             EitherState.None => throw new NoneException("The either has a 'none' value"),
             _ => throw new NotImplementedException(),
         };
 
-        public F Failure => state switch
+        public F Failure => State switch
         {
             EitherState.Failed => failure,
-            EitherState.Value => throw new ValueException("The either has a value, it hasn't failed"),
+            EitherState.Value => throw new HasValueException("The either has not failed, it has value", value),
             EitherState.None => throw new NoneException("The either has a 'none' value"),
             _ => throw new NotImplementedException(),
         };
+
+        public void Match<T>(Func<V, T> value, Func<F, T> failure, Func<T> none)
+        {
+
+        }
 
         private Either(V value, F failure, EitherState state)
         {
             this.value = value;
             this.failure = failure;
-            this.state = state;
+            this.State = state;
         }
         
         public static Either<V, F> Some(V value)
@@ -87,12 +107,18 @@ namespace ThrowAway
             ? None
             : Some(value);
 
-        public override string ToString() => state switch
+        public static implicit operator Either<V, F>(F failure) => IsNull(failure)
+            ? None
+            : Fail(failure);
+
+        public override string ToString() => State switch
         {
             EitherState.Value => value.ToString(),
             EitherState.Failed => failure.ToString(),
             EitherState.None => "None",
             _ => throw new NotImplementedException(),
         };
+
+
     }
 }

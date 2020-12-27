@@ -12,5 +12,7 @@ namespace ThrowAway
         {
             return value == null;
         }
+
+        
     }
 }
