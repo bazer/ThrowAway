@@ -1,10 +1,9 @@
-﻿using System;
-using Xunit;
-using static ThrowAway.Either;
+﻿using Xunit;
+using static ThrowAway.Option;
 
 namespace ThrowAway.Tests
 {
-    public class EitherTests
+    public class OptionFTests
     {
         [Fact]
         public void SomeValueType()
@@ -23,7 +22,7 @@ namespace ThrowAway.Tests
             Assert.True(three.HasValue);
             Assert.Equal(3, three.Value);
 
-            Either<int, string> GetThree() => 3;
+            Option<int, string> GetThree() => 3;
         }
 
         [Fact]
@@ -47,7 +46,6 @@ namespace ThrowAway.Tests
                 var fail = Fail<int, string>(message);
                 Assert.True(fail.HasFailed);
                 Assert.False(fail.HasValue);
-                Assert.False(fail.HasNone);
 
                 var val = fail.Value;
             }
@@ -62,13 +60,12 @@ namespace ThrowAway.Tests
         {
             var message = "Fail message";
 
-            var fail = Either.Catch(() => GetMessage());
+            var fail = Option.Catch(() => GetMessage());
             Assert.True(fail.HasFailed);
             Assert.False(fail.HasValue);
-            Assert.False(fail.HasNone);
             Assert.Equal(message, fail.Failure);
 
-            Either<int, string> GetMessage()
+            Option<int, string> GetMessage()
             {
                 var fail = Fail<int, string>(message);
                 return fail.Value;
@@ -76,52 +73,72 @@ namespace ThrowAway.Tests
         }
 
         [Fact]
-        public void CatchFailWithThrowImplicit()
+        public void CatchFailWithThrowNested()
         {
             var message = "Fail message";
 
-            var fail = Either.Catch(() => GetMessage());
+            var fail = Option.Catch(() => GetMessage());
             Assert.True(fail.HasFailed);
             Assert.Equal(message, fail.Failure);
 
-            Either<int, string> GetMessage() => message;
+            Option<int, string> GetMessage() => GetMessage2().Value;
+            Option<int, string> GetMessage2() => message;
+        }
+
+        [Fact]
+        public void FailWithThrowNested()
+        {
+            var message = "Fail message";
+
+            var fail = GetMessage();
+            Assert.True(fail.HasFailed);
+            Assert.Equal(message, fail.Failure);
+
+            Option<int, string> GetMessage() => GetMessage2();
+            Option<int, string> GetMessage2() => message;
         }
 
         [Fact]
         public void CatchFailWithThrowNull()
         {
-            var none = Either.Catch(() => GetMessage());
-            Assert.False(none.HasFailed);
-            Assert.False(none.HasValue);
-            Assert.True(none.HasNone);
+            Assert.Throws<ValueIsNullException>(() =>
+                Option.Catch(() =>
+                    GetMessage()));
 
-            Either<int, string> GetMessage() => null;
+            Option<int, string> GetMessage() => null;
         }
 
         [Fact]
         public void CatchSome()
         {
-            var some = Either.Catch(() => GetMessage());
+            var some = Option.Catch(() => GetMessage());
             Assert.False(some.HasFailed);
             Assert.True(some.HasValue);
-            Assert.False(some.HasNone);
             Assert.Equal(3, some.Value);
 
-            Either<int, string> GetMessage() => 3;
+            Option<int, string> GetMessage() => 3;
         }
 
-        //[Fact]
-        //public void CatchSomeMatch()
-        //{
-        //    var value = Either.Catch(() => GetMessage()).Match(
-        //        value => value)
+        [Fact]
+        public void MatchSome()
+        {
+            var value = GetMessage()
+                .Match(v => v.ToString(), f => f);
 
-        //    Assert.False(value.HasFailed);
-        //    Assert.True(value.HasValue);
-        //    Assert.False(value.HasNone);
-        //    Assert.Equal(3, value.Value);
+            Assert.Equal("3", value);
 
-        //    Either<int, string> GetMessage() => 3;
-        //}
+            Option<int, string> GetMessage() => 3;
+        }
+
+        [Fact]
+        public void MatchFail()
+        {
+            var value = GetMessage()
+                .Match(v => v.ToString(), f => f);
+
+            Assert.Equal("fail", value);
+
+            Option<int, string> GetMessage() => "fail";
+        }
     }
 }
