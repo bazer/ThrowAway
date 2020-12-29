@@ -1,15 +1,17 @@
-﻿namespace ThrowAway
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ThrowAway
 {
     public class HasFailedException : ValueException
     {
-        public HasFailedException(string message, object value) : base(message, value)
+        public HasFailedException([DisallowNull] string message, [DisallowNull] object value) : base(message, value)
         {
         }
     }
 
     public class HasFailedException<T> : HasFailedException
     {
-        public HasFailedException(string message, T value) : base(message, value)
+        public HasFailedException([DisallowNull] string message, [DisallowNull] T value) : base(message, value)
         {
         }
 

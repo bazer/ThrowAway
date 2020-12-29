@@ -3,7 +3,7 @@ using static ThrowAway.Option;
 
 namespace ThrowAway.Tests
 {
-    public class OptionFTests
+    public class OptionEitherTests
     {
         [Fact]
         public void SomeValueType()
@@ -139,6 +139,64 @@ namespace ThrowAway.Tests
             Assert.Equal("fail", value);
 
             Option<int, string> GetMessage() => "fail";
+        }
+
+        [Fact]
+        public void EqualsWithValues()
+        {
+            var some1 = Some<string, string>("some");
+            var some2 = Some<string, string>("some");
+
+            Assert.True(some1 == some2);
+            Assert.True(some2 == some1);
+            Assert.False(some1 != some2);
+            Assert.False(some2 != some1);
+        }
+
+        [Fact]
+        public void EqualsWithFails()
+        {
+            var fail1 = Fail<string, string>("fail");
+            var fail2 = Fail<string, string>("fail");
+
+            Assert.True(fail1 == fail2);
+            Assert.True(fail2 == fail1);
+            Assert.False(fail1 != fail2);
+            Assert.False(fail2 != fail1);
+        }
+
+        [Fact]
+        public void NotEqualsWithFailsDifferentType()
+        {
+            var fail1 = Fail<int, string>("fail");
+            var fail2 = Fail<string, string>("fail");
+
+            Assert.False(fail1.Equals(fail2));
+            Assert.False(fail2.Equals(fail1));
+        }
+
+        [Fact]
+        public void NotEqualsWithValues()
+        {
+            var some1 = Some<string, string>("some1");
+            var some2 = Some<string, string>("some2");
+
+            Assert.False(some1 == some2);
+            Assert.False(some2 == some1);
+            Assert.True(some1 != some2);
+            Assert.True(some2 != some1);
+        }
+
+        [Fact]
+        public void NotEqualsWithValueAndFail()
+        {
+            var some = Some<string, string>("some");
+            var fail = Fail<string, string>("fail");
+
+            Assert.False(some == fail);
+            Assert.False(fail == some);
+            Assert.True(some != fail);
+            Assert.True(fail != some);
         }
     }
 }
