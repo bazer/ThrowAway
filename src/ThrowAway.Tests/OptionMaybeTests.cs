@@ -306,5 +306,31 @@ namespace ThrowAway.Tests
             Assert.True(some != fail);
             Assert.True(fail != some);
         }
+
+        [Fact]
+        public void NullDefault()
+        {
+            Option<string> defaultVal = default;
+
+            Assert.False(defaultVal.HasValue);
+            Assert.True(defaultVal.HasFailed);
+            Assert.Null(defaultVal.Failure.Value);
+            Assert.Null(defaultVal.Failure.StackTrace);
+            Assert.Equal(string.Empty, defaultVal.Failure.ToString());
+        }
+
+        [Fact]
+        public void StackTrace()
+        {
+            OptionConfig.LogStackTraceOnFailure = true;
+
+            var fail = Fail("fail");
+            Assert.True(fail.HasFailed);
+            Assert.Equal("fail", fail.Failure);
+            Assert.NotNull(fail.Failure.StackTrace);
+            Assert.NotEmpty(fail.Failure.StackTrace.ToString());
+
+            OptionConfig.LogStackTraceOnFailure = false;
+        }
     }
 }

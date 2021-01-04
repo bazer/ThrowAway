@@ -100,7 +100,7 @@ namespace ThrowAway
 
         public static Option<V, F> Fail([DisallowNull] F failure)
         {
-            var fail = new Failure<F>(failure, Config.LogStackTraceOnFailure
+            var fail = new Failure<F>(failure, OptionConfig.LogStackTraceOnFailure
                 ? new StackTrace()
                 : null);
 

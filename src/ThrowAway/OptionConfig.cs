@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ThrowAway
 {
-    public static class Config
+    public static class OptionConfig
     {
         public static bool LogStackTraceOnFailure { get; set; }
     }

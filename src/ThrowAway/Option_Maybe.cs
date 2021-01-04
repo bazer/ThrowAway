@@ -48,7 +48,7 @@ namespace ThrowAway
 
         public static Option<V> Fail([DisallowNull] string reason)
         {
-            var failure = new Failure<string>(reason, Config.LogStackTraceOnFailure
+            var failure = new Failure<string>(reason, OptionConfig.LogStackTraceOnFailure
                 ? new StackTrace()
                 : null);
 
