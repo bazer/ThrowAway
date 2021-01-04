@@ -51,7 +51,7 @@ namespace ThrowAway.Tests
             }
             catch (HasFailedException<string> e)
             {
-                Assert.Equal(e.Value, message);
+                Assert.Equal(e.Failure, message);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using static ThrowAway.Helpers;
@@ -8,11 +9,8 @@ namespace ThrowAway
 {
     public readonly struct Option<V>
     {
-        [DisallowNull]
         private readonly V value;
-
-        [DisallowNull]
-        private readonly string failure;
+        private readonly Failure<string> failure;
 
         public readonly bool HasValue { get; }
         public readonly bool HasFailed => !HasValue;
@@ -21,7 +19,7 @@ namespace ThrowAway
            ? value
            : throw new HasFailedException<string>("The option has failed with", failure);
 
-        public string Failure => HasValue
+        public Failure<string> Failure => HasValue
             ? throw new HasValueException<V>("The option has not failed, it has value", value!)
             : failure;
 
@@ -33,7 +31,7 @@ namespace ThrowAway
             return this;
         }
 
-        private Option([DisallowNull] V value, [DisallowNull] string failure, bool hasValue)
+        private Option([DisallowNull] V value, Failure<string> failure, bool hasValue)
         {
             this.value = value;
             this.failure = failure;
@@ -45,11 +43,17 @@ namespace ThrowAway
             if (IsNull(value))
                 throw new ValueIsNullException("'Some' cannot be called with a 'null' value");
 
-            return new Option<V>(value, string.Empty, true);
+            return new Option<V>(value, default, true);
         }
 
         public static Option<V> Fail([DisallowNull] string reason)
-            => new Option<V>(default!, reason, false);
+        {
+            var failure = new Failure<string>(reason, Config.LogStackTraceOnFailure
+                ? new StackTrace()
+                : null);
+
+            return new Option<V>(default!, failure, false);
+        }
 
         public static implicit operator V(Option<V> option) => option.Value;
 
@@ -69,9 +73,17 @@ namespace ThrowAway
             return Fail(reason);
         }
 
+        public static implicit operator Option<V>(Failure<string> failure)
+        {
+            if (IsNull(failure.Value))
+                throw new ValueIsNullException("Cannot convert from a failure with 'null' value. 'Null' is not allowed.");
+
+            return new Option<V>(default!, failure, false);
+        }
+
         public override string ToString() => HasValue
             ? value?.ToString() ?? ""
-            : failure;
+            : failure.Value;
 
         public override bool Equals(object obj)
         {

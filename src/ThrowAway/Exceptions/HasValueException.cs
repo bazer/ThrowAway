@@ -1,11 +1,21 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThrowAway
 {
-    public class HasValueException : ValueException
+    public class HasValueException : ThrowAwayException
     {
-        public HasValueException([DisallowNull] string message, [DisallowNull] object value) : base(message, value)
+        public object Value { get; }
+
+        public HasValueException([DisallowNull] string message, [DisallowNull] object value) : base($"{message} '{value}'")
         {
+            if (Helpers.IsNull(message))
+                throw new ArgumentNullException(nameof(message));
+
+            if (Helpers.IsNull(value))
+                throw new ArgumentNullException(nameof(value));
+
+            Value = value;
         }
     }
 

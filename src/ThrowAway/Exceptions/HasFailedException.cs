@@ -1,20 +1,30 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThrowAway
 {
-    public class HasFailedException : ValueException
+    public class HasFailedException : ThrowAwayException
     {
-        public HasFailedException([DisallowNull] string message, [DisallowNull] object value) : base(message, value)
+        public Failure<object> Failure { get; }
+
+        public HasFailedException([DisallowNull] string message, [DisallowNull] Failure<object> value) : base($"{message} '{value}'")
         {
+            if (Helpers.IsNull(message))
+                throw new ArgumentNullException(nameof(message));
+
+            if (Helpers.IsNull(value))
+                throw new ArgumentNullException(nameof(value));
+
+            Failure = value;
         }
     }
 
-    public class HasFailedException<T> : HasFailedException
+    public class HasFailedException<F> : HasFailedException
     {
-        public HasFailedException([DisallowNull] string message, [DisallowNull] T value) : base(message, value)
+        public HasFailedException([DisallowNull] string message, [DisallowNull] Failure<F> failure) : base(message, (Failure<object>)failure)
         {
         }
 
-        public T Failure => (T)base.Value;
+        new public Failure<F> Failure => (Failure<F>)base.Failure;
     }
 }

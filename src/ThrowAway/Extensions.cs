@@ -20,29 +20,29 @@ namespace ThrowAway
                 : Option.Fail<V, F>(failure);
         }
 
-        public static T ValueOrFailure<T, TException>(this Option<T, TException> option)
+        public static V ValueOrFailure<V, F>(this Option<V, F> option)
             => option.Value;
 
-        public static T ValueOrFailure<T, TException>(this Option<T, TException> option, string errorMessage)
+        public static V ValueOrFailure<V, F>(this Option<V, F> option, string failureMessage)
         {
             if (option.HasValue)
                 return option.Value;
 
-            throw new HasFailedException(errorMessage, option.Failure!);
+            throw new HasFailedException<F>(failureMessage, option.Failure);
         }
 
-        public static V ValueOrFailure<V, F>(this Option<V, F> option, Func<F, string> errorMessageFactory)
+        public static V ValueOrFailure<V, F>(this Option<V, F> option, Func<F, string> failureFunc)
         {
-            if (errorMessageFactory == null)
-                throw new ArgumentNullException(nameof(errorMessageFactory));
+            if (failureFunc == null)
+                throw new ArgumentNullException(nameof(failureFunc));
 
             if (option.HasValue)
                 return option.Value;
 
-            throw new HasFailedException<F>(errorMessageFactory(option.Failure), option.Failure!);
+            throw new HasFailedException<F>(failureFunc(option.Failure), option.Failure);
         }
 
-        public static T ValueOrDefault<T, TException>(this Option<T, TException> option)
+        public static V ValueOrDefault<V, F>(this Option<V, F> option)
         {
             if (option.HasValue)
                 return option.Value;
