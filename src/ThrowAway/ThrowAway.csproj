@@ -3,6 +3,25 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
+    <Version>0.1</Version>
+    <Authors>Sebastian Öberg</Authors>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>https://github.com/bazer/throwaway</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bazer/throwaway</RepositoryUrl>
+    <Description>Option type that combines functional programming with clean procedural code flow, through implicit value conversions and exceptions.</Description>
+    <PackageReleaseNotes>First release, use in production at your own risk.</PackageReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+    <Configuration>Release</Configuration>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="MinVer" Version="2.3.0" PrivateAssets="All" />
+  </ItemGroup>
+  
 </Project>
