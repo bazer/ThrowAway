@@ -224,5 +224,43 @@ namespace ThrowAway.Tests
 
             OptionConfig.LogStackTraceOnFailure = false;
         }
+
+        public interface ITest
+        {
+            int Value { get; }
+        }
+
+        public class Test : ITest
+        {
+            public int Value { get; set; }
+        }
+
+        [Fact]
+        public void SomeReturnInterfaceValue()
+        {
+            var three = GetInterface();
+
+            Assert.True(three.HasValue);
+            Assert.Equal(3, three.Value.Value);
+
+            static Option<ITest, string> GetInterface()
+            {
+                return new Test() { Value = 3 };
+            };
+        }
+
+        [Fact]
+        public void SomeReturnInterfaceType()
+        {
+            var three = GetInterface();
+
+            Assert.True(three.HasValue);
+            Assert.Equal(3, three.Value.Value);
+
+            static Option<ITest, string> GetInterface()
+            {
+                return Option<ITest, string>.Some(new Test() { Value = 3 } as ITest);
+            };
+        }
     }
 }
