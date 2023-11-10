@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using static ThrowAway.Helpers;
 using static ThrowAway.Option;
 
@@ -26,15 +24,5 @@ namespace ThrowAway
                 some: mapping,
                 fail => Fail<T>(fail));
         }
-
-        //public static Option<T, F> FlatMap<V, F, T>(this Option<V, F> option, Func<V, Option<T, F>> mapping)
-        //{
-        //    if (mapping == null)
-        //        throw new ArgumentNullException(nameof(mapping));
-
-        //    return option.Match(
-        //        some: mapping,
-        //        fail => Fail<T, F>(fail!));
-        //}
     }
 }

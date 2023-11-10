@@ -7,6 +7,16 @@ namespace ThrowAway.Tests
     public class OptionMaybeTests
     {
         [Fact]
+        public void Void()
+        {
+            var voidValue = Option.Void();
+
+            Assert.True(!voidValue.HasFailed);
+            Assert.True(voidValue.HasValue);
+            Assert.IsType<VoidResult>(voidValue.Value);
+        }
+
+        [Fact]
         public void SomeValueType()
         {
             var three = Option.Some(3);

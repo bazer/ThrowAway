@@ -22,7 +22,7 @@ namespace ThrowAway
         public override string ToString() =>
             Value?.ToString() ?? "";
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (Value == null)
                 return obj == null;
