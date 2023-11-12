@@ -1,8 +1,7 @@
-﻿namespace ThrowAway
+﻿namespace ThrowAway;
+
+internal static class Helpers
 {
-    internal static class Helpers
-    {
-        internal static bool IsNull<T>(T value) =>
-            value == null;
-    }
+    internal static bool IsNull<T>(T value) =>
+        value == null;
 }
