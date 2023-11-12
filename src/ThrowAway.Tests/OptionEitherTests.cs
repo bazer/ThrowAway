@@ -262,5 +262,6 @@ namespace ThrowAway.Tests
                 return Option<ITest, string>.Some(new Test() { Value = 3 } as ITest);
             };
         }
+
     }
 }
