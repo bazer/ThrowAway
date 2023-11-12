@@ -345,7 +345,7 @@ namespace ThrowAway
         /// <returns>true if the specified object is equal to the current Option instance; otherwise, false.</returns>
         public override bool Equals(object? obj)
         {
-            if (!(obj is Option<V, F> option))
+            if (obj is not Option<V, F> option)
                 return false;
 
             if (option.HasValue && !HasValue)

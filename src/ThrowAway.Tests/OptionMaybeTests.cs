@@ -223,7 +223,7 @@ namespace ThrowAway.Tests
                 Option.Catch(() =>
                     GetMessage()));
 
-            Option<int> GetMessage() => null;
+            static Option<int> GetMessage() => null;
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace ThrowAway.Tests
             Assert.True(some.HasValue);
             Assert.Equal(3, some.Value);
 
-            Option<int> GetMessage() => 3;
+            static Option<int> GetMessage() => 3;
         }
 
         [Fact]
@@ -245,7 +245,7 @@ namespace ThrowAway.Tests
 
             Assert.Equal("3", value);
 
-            Option<int> GetMessage() => 3;
+            static Option<int> GetMessage() => 3;
         }
 
         [Fact]
@@ -256,7 +256,7 @@ namespace ThrowAway.Tests
 
             Assert.Equal("fail", value);
 
-            Option<int> GetMessage() => "fail";
+            static Option<int> GetMessage() => "fail";
         }
 
         [Fact]

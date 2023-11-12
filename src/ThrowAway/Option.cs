@@ -17,7 +17,7 @@ namespace ThrowAway
     /// </summary>
     public static class Option
     {
-        private static readonly VoidResult voidValue = new VoidResult();
+        private static readonly VoidResult voidValue = new();
 
         /// <summary>
         /// Creates an Option instance representing a void result.
