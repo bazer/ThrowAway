@@ -173,4 +173,47 @@ public static class FailureExtensions
             some: v => throw new HasValueException(exceptionMessageFunc(v), v!),
             fail: x => x);
     }
+
+    /// <summary>
+    /// Throws an exception if the Option is in a failed state, otherwise returns the Option itself.
+    /// When invoked, it allows an Option in a failed state to propagate the failure as an exception, thereby 
+    /// transitioning from a functional error handling approach to a more traditional exception-based 
+    /// mechanism. This is useful in contexts where failure of the Option represents an unexpected or
+    /// critical condition that cannot be ignored or where traditional exception handling is more 
+    /// appropriate.
+    /// </summary>
+    /// <typeparam name="V">The type of the value.</typeparam>
+    /// <param name="option">The Option instance.</param>
+    /// <returns>The same Option instance if it is in a successful state.</returns>
+    /// <exception cref="HasFailedException&lt;@string&gt;">Thrown when the Option is in a failed state, providing
+    /// details about the failure.</exception>
+    public static Option<V> ThrowOnFail<V>(this Option<V> option)
+    {
+        if (option.HasFailed)
+            throw new HasFailedException<string>("The option has failed with", option.Failure!);
+
+        return option;
+    }
+
+    /// <summary>
+    /// Throws an exception if the Option is in a failed state, otherwise returns the Option itself.
+    /// When invoked, it allows an Option in a failed state to propagate the failure as an exception, thereby 
+    /// transitioning from a functional error handling approach to a more traditional exception-based 
+    /// mechanism. This is useful in contexts where failure of the Option represents an unexpected or
+    /// critical condition that cannot be ignored or where traditional exception handling is more 
+    /// appropriate.
+    /// </summary>
+    /// <typeparam name="V">The type of the value.</typeparam>
+    /// <typeparam name="F">The type of the failure.</typeparam>
+    /// <param name="option">The Option instance.</param>
+    /// <returns>The same Option instance if it is in a successful state.</returns>
+    /// <exception cref="HasFailedException&lt;@string&gt;">Thrown when the Option is in a failed state, providing
+    /// details about the failure.</exception>
+    public static Option<V, F> ThrowOnFail<V, F>(this Option<V, F> option)
+    {
+        if (option.HasFailed)
+            throw new HasFailedException<F>("The option has failed with", option.Failure!);
+
+        return option;
+    }
 }

@@ -52,24 +52,7 @@ public readonly struct Option<V>
         ? throw new HasValueException<V>("The option has not failed, it has value", value!)
         : failure;
 
-    /// <summary>
-    /// Throws an exception if the Option is in a failed state, otherwise returns the Option itself.
-    /// When invoked, it allows an Option in a failed state to propagate the failure as an exception, thereby 
-    /// transitioning from a functional error handling approach to a more traditional exception-based 
-    /// mechanism. This is useful in contexts where failure of the Option represents an unexpected or
-    /// critical condition that cannot be ignored or where traditional exception handling is more 
-    /// appropriate.
-    /// </summary>
-    /// <returns>The same Option instance if it is in a successful state.</returns>
-    /// <exception cref="HasFailedException&lt;@string&gt;">Thrown when the Option is in a failed state, providing
-    /// details about the failure.</exception>
-    public Option<V> ThrowOnFail()
-    {
-        if (HasFailed)
-            throw new HasFailedException<string>("The option has failed with", failure!);
-
-        return this;
-    }
+    
 
     private Option([DisallowNull] V value, Failure<string> failure, bool hasValue)
     {
