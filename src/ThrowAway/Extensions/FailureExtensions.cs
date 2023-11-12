@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-
-namespace ThrowAway;
+﻿namespace ThrowAway;
 
 /// <summary>
 /// Provides extension methods for working with Option types. These methods enhance the usability

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using static ThrowAway.Helpers;
+﻿using static ThrowAway.Helpers;
 using static ThrowAway.Option;
 
 namespace ThrowAway;

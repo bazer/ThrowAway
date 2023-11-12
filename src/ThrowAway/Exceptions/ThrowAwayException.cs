@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThrowAway;
+﻿namespace ThrowAway;
 
 /// <summary>
 /// Represents a base exception type for the ThrowAway library. This custom exception class is 

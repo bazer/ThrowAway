@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThrowAway;
+﻿namespace ThrowAway;
 
 /// <summary>
 /// Provides extension methods for returning the current Option if it is in a successful state; otherwise, returns an alternative 

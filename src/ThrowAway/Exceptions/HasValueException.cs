@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-
-namespace ThrowAway;
+﻿namespace ThrowAway;
 
 /// <summary>
 /// Represents an exception indicating that an operation represented by an Option unexpectedly has a value.

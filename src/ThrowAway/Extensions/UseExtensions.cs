@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThrowAway.Extensions;
+﻿namespace ThrowAway.Extensions;
 
 /// <summary>
 /// Provides extension methods for using Option types when they are in a successful state.
