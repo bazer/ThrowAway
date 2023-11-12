@@ -12,7 +12,7 @@ public static class ElseExtensions
     /// in cases where the original Option is in a failed state. It allows for easy chaining of fallbacks, 
     /// enabling more complex conditional logic in a concise manner.
     /// </summary>
-    ///<param name="option">The Option instance.</param>
+    /// <param name="option">The Option instance.</param>
     /// <param name="alternativeOption">The alternative Option to return if the current Option is in a failed state.</param>
     /// <returns>The current Option if it is in a successful state; otherwise, the alternative Option.</returns>
     public static Option<V, F> Else<V, F>(this Option<V, F> option, Option<V, F> alternativeOption) =>
