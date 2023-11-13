@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using ThrowAway.Extensions;
+using Xunit;
 using static ThrowAway.Option;
 
 namespace ThrowAway.Tests

@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides extension methods for using Option types when they are in a successful state.
 /// </summary>
-public static class UseExtensions
+public static class EitherUseExtensions
 {
     /// <summary>
     /// Performs a specified action on the value of an Option if the Option is in a successful state.

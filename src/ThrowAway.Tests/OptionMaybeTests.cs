@@ -1,4 +1,5 @@
 using System;
+using ThrowAway.Extensions;
 using Xunit;
 using static ThrowAway.Option;
 

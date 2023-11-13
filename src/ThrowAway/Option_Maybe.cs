@@ -52,7 +52,7 @@ public readonly struct Option<V>
         ? throw new HasValueException<V>("The option has not failed, it has value", value!)
         : failure;
 
-    
+
 
     private Option([DisallowNull] V value, Failure<string> failure, bool hasValue)
     {

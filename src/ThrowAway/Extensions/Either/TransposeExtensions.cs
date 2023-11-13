@@ -8,7 +8,7 @@ namespace ThrowAway.Extensions;
 /// Transposing in this context refers to converting a collection of Options into a single Option
 /// containing a collection, based on the success or failure state of the individual Options.
 /// </summary>
-public static class TransposeExtensions
+public static class EitherTransposeExtensions
 {
     /// <summary>
     /// Transposes a collection of Options, turning an IEnumerable&lt;Option&lt;V, F&gt;&gt; into an Option&lt;List&lt;V&gt;, List&lt;F&gt;&gt;.

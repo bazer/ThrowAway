@@ -1,10 +1,10 @@
-﻿namespace ThrowAway;
+﻿namespace ThrowAway.Extensions;
 
 /// <summary>
 /// Provides extension methods for returning the current Option if it is in a successful state; otherwise, returns an alternative 
 /// Option provided.
 /// </summary>
-public static class ElseExtensions
+public static class EitherElseExtensions
 {
     /// <summary>
     /// Returns the current Option if it is in a successful state; otherwise, returns an alternative 

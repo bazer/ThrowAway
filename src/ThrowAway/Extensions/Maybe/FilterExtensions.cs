@@ -1,9 +1,9 @@
-﻿namespace ThrowAway;
+﻿namespace ThrowAway.Extensions;
 
 /// <summary>
 /// Provides extension methods for filtering Option types when they are in a successful state.
 /// </summary>
-public static class FilterExtensions
+public static class MaybeFilterExtensions
 {
     /// <summary>
     /// Filters the Option based on a provided condition. If the Option is in a successful state and the value 
@@ -19,10 +19,10 @@ public static class FilterExtensions
     /// <returns>An Option that is either the original Option if it is in a failed state or if the value satisfies 
     /// the condition, or a new failed Option with the provided failure reason if the condition is not satisfied.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the condition is null.</exception>
-    public static Option<V, F> Filter<V, F>(this Option<V, F> option, [DisallowNull] Func<V, bool> condition, [DisallowNull] F failure)
+    public static Option<V> Filter<V>(this Option<V> option, [DisallowNull] Func<V, bool> condition, [DisallowNull] string failure)
     {
         return option.HasValue && !condition(option.Value)
-            ? Option.Fail<V, F>(failure)
+            ? Option.Fail<V>(failure)
             : option;
     }
 }
