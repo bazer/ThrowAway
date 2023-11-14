@@ -19,7 +19,7 @@ public readonly struct Failure<F>
     /// <summary>
     /// An optional stack trace associated with the failure, providing additional debugging information.
     /// </summary>
-    public readonly StackTrace? StackTrace { get; }
+    public readonly string? StackTrace { get; }
 
     /// <summary>
     /// Initializes a new instance of the Failure struct with the specified failure value and optional stack trace.
@@ -27,6 +27,15 @@ public readonly struct Failure<F>
     /// <param name="value">The failure value of type F.</param>
     /// <param name="stackTrace">The optional stack trace associated with the failure.</param>
     public Failure([DisallowNull] F value, [AllowNull] StackTrace? stackTrace)
+    {
+        if (IsNull(value))
+            throw new ArgumentNullException(nameof(value));
+
+        Value = value;
+        StackTrace = stackTrace?.ToString();
+    }
+
+    internal Failure([DisallowNull] F value, [AllowNull] string? stackTrace)
     {
         if (IsNull(value))
             throw new ArgumentNullException(nameof(value));

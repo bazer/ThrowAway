@@ -91,6 +91,13 @@ public readonly struct Option<V, F>
         return new Option<V, F>(default!, fail, false);
     }
 
+    internal static Option<V, F> Fail([DisallowNull] F failure, [AllowNull] string? stackTrace)
+    {
+        var fail = new Failure<F>(failure, stackTrace);
+
+        return new Option<V, F>(default!, fail, false);
+    }
+
     /// <summary>
     /// Provides an implicit conversion from an Option&lt;V&gt; to its contained value of type V.
     /// This conversion allows the Option&lt;V&gt; to be used in contexts where a value of type V is expected,

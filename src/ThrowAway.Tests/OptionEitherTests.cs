@@ -61,7 +61,7 @@ namespace ThrowAway.Tests
         {
             var message = "Fail message";
 
-            var fail = Option.Catch(() => GetMessage());
+            var fail = Option.CatchFailure(() => GetMessage());
             Assert.True(fail.HasFailed);
             Assert.False(fail.HasValue);
             Assert.Equal(message, fail.Failure);
@@ -78,7 +78,7 @@ namespace ThrowAway.Tests
         {
             var message = "Fail message";
 
-            var fail = Option.Catch(() => GetMessage());
+            var fail = Option.CatchFailure(() => GetMessage());
             Assert.True(fail.HasFailed);
             Assert.Equal(message, fail.Failure);
 
@@ -103,7 +103,7 @@ namespace ThrowAway.Tests
         public void CatchFailWithThrowNull()
         {
             Assert.Throws<ValueIsNullException>(() =>
-                Option.Catch(() =>
+                Option.CatchFailure(() =>
                     GetMessage()));
 
             static Option<int, string> GetMessage() => null;
@@ -112,7 +112,7 @@ namespace ThrowAway.Tests
         [Fact]
         public void CatchSome()
         {
-            var some = Option.Catch(() => GetMessage());
+            var some = Option.CatchFailure(() => GetMessage());
             Assert.False(some.HasFailed);
             Assert.True(some.HasValue);
             Assert.Equal(3, some.Value);

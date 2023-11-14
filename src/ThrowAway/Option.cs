@@ -75,7 +75,7 @@ public static class Option
     /// <typeparam name="V">The success type of the Option returned by the function.</typeparam>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result of the function or a failure if an exception occurs.</returns>
-    public static Option<V> Catch<V>(Func<Option<V>> func)
+    public static Option<V> CatchFailure<V>(Func<Option<V>> func)
     {
         try
         {
@@ -88,13 +88,35 @@ public static class Option
     }
 
     /// <summary>
+    /// Attempts to execute a function that returns an Option and captures any failure.
+    /// </summary>
+    /// <typeparam name="V">The success type of the Option returned by the function.</typeparam>
+    /// <param name="func">The function to execute.</param>
+    /// <returns>The result of the function or a failure if an exception occurs.</returns>
+    public static Option<V> CatchAll<V>(Func<Option<V>> func)
+    {
+        try
+        {
+            return func();
+        }
+        catch (HasFailedException<string> e)
+        {
+            return e.Failure;
+        }
+        catch (Exception e)
+        {
+            return Option<V>.Fail(e.Message, e.StackTrace);
+        }
+    }
+
+    /// <summary>
     /// Attempts to execute a function that returns an Option with custom failure type and captures any failure.
     /// </summary>
     /// <typeparam name="V">The success type of the Option returned by the function.</typeparam>
     /// <typeparam name="F">The failure type of the Option.</typeparam>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result of the function or a custom failure if an exception occurs.</returns>
-    public static Option<V, F> Catch<V, F>(Func<Option<V, F>> func)
+    public static Option<V, F> CatchFailure<V, F>(Func<Option<V, F>> func)
     {
         try
         {
@@ -103,6 +125,35 @@ public static class Option
         catch (HasFailedException<F> e)
         {
             return e.Failure!;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to execute a function that returns an Option and captures any failure.
+    /// </summary>
+    /// <typeparam name="V">The success type of the Option returned by the function.</typeparam>
+    /// <typeparam name="F">The failure type of the Option.</typeparam>
+    /// <param name="func">The function to execute.</param>
+    /// <param name="exceptionMapping">Mapping of the Exception message to the failure type F</param>
+    /// <returns>The result of the function or a failure if an exception occurs.</returns>
+    public static Option<V, F> CatchAll<V, F>(Func<Option<V, F>> func, [DisallowNull] Func<string, F> exceptionMapping)
+    {
+        ArgumentNullException.ThrowIfNull(exceptionMapping);
+
+        try
+        {
+            return func();
+        }
+        catch (HasFailedException<F> e)
+        {
+            return e.Failure;
+        }
+        catch (Exception e)
+        {
+            var message = exceptionMapping(e.Message);
+            ArgumentNullException.ThrowIfNull(message);
+
+            return Option<V, F>.Fail(message, e.StackTrace);
         }
     }
 }
