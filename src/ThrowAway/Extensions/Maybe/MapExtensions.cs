@@ -34,7 +34,7 @@ public static class MaybeMapExtensions
     }
 
     /// <summary>
-    /// Transforms the failure of an Option&lt;V, F&gt; to Option&lt;V, T&gt; using a specified mapping function
+    /// Transforms the failure of an Option&lt;V&gt; to Option&lt;V, T&gt; using a specified mapping function
     /// if the Option is in a failed state. This method is useful for changing the type of failure
     /// represented by the Option, allowing for more flexible error handling and failure representation.
     /// </summary>

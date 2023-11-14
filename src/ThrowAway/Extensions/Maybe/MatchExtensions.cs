@@ -37,7 +37,7 @@ public static class MaybeMatchExtensions
     }
 
     /// <summary>
-    /// Matches the state of an Option&lt;V, F&gt; and executes a corresponding action based on that state.
+    /// Matches the state of an Option&lt;V&gt; and executes a corresponding action based on that state.
     /// This variant of Match executes actions rather than returning a value, allowing for side effects 
     /// based on the state of the Option. The 'some' action is executed if the Option is successful, 
     /// while the 'fail' action is executed if the Option is failed.

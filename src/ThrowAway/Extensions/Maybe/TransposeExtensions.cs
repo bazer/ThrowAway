@@ -11,7 +11,7 @@ namespace ThrowAway.Extensions;
 public static class MaybeTransposeExtensions
 {
     /// <summary>
-    /// Transposes a collection of Options, turning an IEnumerable&lt;Option&lt;V, F&gt;&gt; into an Option&lt;List&lt;V&gt;, List&lt;F&gt;&gt;.
+    /// Transposes a collection of Options, turning an IEnumerable&lt;Option&lt;V&gt;&gt; into an Option&lt;List&lt;V&gt;, List&lt;string&gt;&gt;.
     /// If any Option in the collection has failed, the result is a failed Option containing a list of all failures.
     /// Otherwise, the result is a successful Option containing a list of all values.
     /// </summary>
