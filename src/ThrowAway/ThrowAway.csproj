@@ -1,16 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<LangVersion>11.0</LangVersion>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<LangVersion>12.0</LangVersion>
 		<Nullable>enable</Nullable>
-		<Version>0.2</Version>
 		<Authors>Sebastian Öberg</Authors>
 		<Copyright>Sebastian Öberg</Copyright>
-		<PackageProjectUrl>https://github.com/bazer/throwaway</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/bazer/throwaway</RepositoryUrl>
-		<Description>Option type that combines functional programming with clean procedural code flow, through implicit value conversions and exceptions.</Description>
-		<PackageReleaseNotes>First release, use in production at your own risk.</PackageReleaseNotes>
+		<PackageProjectUrl>https://github.com/bazer/ThrowAway</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/bazer/ThrowAway</RepositoryUrl>
+		<Description>
+			ThrowAway is a C# library designed to elegantly handle the dichotomy between successful outcomes (Values) and error states (Failures) in method returns.
+			The library leverages the functional concept of Option, enabling the return of an Option from a method that can either be matched, mapped, filtered, transposed, etc. or implicitly type cast to the underlying Value.
+
+			* Dual Outcomes: Facilitates methods to return either a Value or a Failure, encapsulated in Option types.
+			* Seamless Type Casting: Implicit type casting of Option with a value to its underlying type; throws an exception if it's a Failure, which can be caught and handled elsewhere.
+			* No Nulls Allowed: Options are struct-based, ensuring an instance can never be null. Disallows nulls for both Value and Failure, enhancing type safety and predictability.
+		</Description>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -19,6 +24,7 @@
 		<Deterministic>true</Deterministic>
 		<Configuration>Release</Configuration>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageOutputPath>./../../nupkg</PackageOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
