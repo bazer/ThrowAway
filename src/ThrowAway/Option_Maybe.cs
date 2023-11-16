@@ -1,4 +1,5 @@
-﻿using static ThrowAway.Helpers;
+﻿using ThrowAway.Extensions;
+using static ThrowAway.Helpers;
 
 namespace ThrowAway;
 
@@ -96,6 +97,27 @@ public readonly struct Option<V>
     }
 
     /// <summary>
+    /// Transforms the contained value of an Option&lt;V&gt; using a specified mapping function that returns Option&lt;T&gt;
+    /// if the original Option is in a successful state. This variant of FlatMap allows for transformations to a different
+    /// type of Option without introducing a new failure type. If the original Option is in a failed state, the failure is
+    /// propagated without applying the mapping function.
+    /// </summary>
+    /// <typeparam name="T">The type of the value in the resulting Option.</typeparam>
+    /// <param name="mapping">A function to apply to the Option's value if it is in a successful state.</param>
+    /// <returns>An Option of type T resulting from applying the mapping function to the original Option's value,
+    /// if it is in a successful state. If the original Option is in a failed state, returns an Option indicating the failure.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the mapping function is null.</exception>
+    public Option<T> FlatMap<T>([DisallowNull] Func<V, Option<T>> mapping)
+    {
+        if (IsNull(mapping))
+            throw new ArgumentNullException(nameof(mapping));
+
+        return this.Match(
+            some: mapping,
+            Option.Fail<T>);
+    }
+
+    /// <summary>
     /// Provides an implicit conversion from an Option&lt;V&gt; to its contained value of type V.
     /// This conversion allows the Option&lt;V&gt; to be used in contexts where a value of type V is expected,
     /// seamlessly unwrapping the contained value. It simplifies the usage of Option types by enabling
@@ -106,8 +128,6 @@ public readonly struct Option<V>
     /// <returns>The value contained within the Option&lt;V&gt; if it exists.</returns>
     /// <exception cref="HasFailedException">Thrown if the Option&lt;V&gt; does not contain a value.</exception>
     public static implicit operator V(Option<V> option) => option.Value;
-
-
 
     /// <summary>
     /// Converts a value to an Option containing that value.

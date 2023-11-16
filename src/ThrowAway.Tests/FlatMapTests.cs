@@ -40,7 +40,7 @@ namespace ThrowAway.Tests
             var option = Option.Some<int, string>(5);
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => option.FlatMap<int, string, string>(null));
+            Assert.Throws<ArgumentNullException>(() => option.FlatMap<string>(null));
         }
     }
 }

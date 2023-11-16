@@ -6,6 +6,19 @@
 public static class EitherValueOrExtensions
 {
     /// <summary>
+    /// Retrieves the contained value of the Option if it is in a successful state; otherwise, returns 
+    /// an alternative value provided. This method is useful for providing a default or fallback value 
+    /// in cases where the Option does not contain a value, allowing for seamless value retrieval 
+    /// without explicit checks for the presence of the value.
+    /// </summary>
+    /// <param name="option">The Option instance to retrieve the value from.</param>
+    /// <param name="alternative">The alternative value to return if the Option is in a failed state.</param>
+    /// <returns>The contained value if the Option is in a successful state; otherwise, the alternative value.</returns>
+    public static V ValueOr<V, F>(this Option<V, F> option, V alternative) => option.HasValue
+        ? option.Value
+        : alternative;
+
+    /// <summary>
     /// Retrieves the contained value of the Option if it is in a successful state; otherwise, invokes 
     /// a factory function to provide an alternative value. This method offers flexibility by deferring 
     /// the creation of the alternative value until it is needed, which can be beneficial for scenarios 
