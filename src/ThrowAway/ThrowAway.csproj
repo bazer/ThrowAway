@@ -24,6 +24,7 @@
 		<Deterministic>true</Deterministic>
 		<Configuration>Release</Configuration>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageOutputPath>./../../nupkg</PackageOutputPath>
 	</PropertyGroup>
 
@@ -37,6 +38,7 @@
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
+		<None Include="..\..\README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 
 </Project>

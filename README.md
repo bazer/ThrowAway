@@ -1,7 +1,7 @@
-## Overview
-**ThrowAway** is a C# library designed to elegantly handle the dichotomy between successful outcomes **(Values)** and error states **(Failures)** in method returns. 
+## ThrowAway
+**ThrowAway** is a C# library designed to elegantly handle the dichotomy between successful outcomes (`Values`) and error states (`Failures`) in method returns. 
 
-The library leverages the functional concept of **Option**, enabling the return of an `Option` from a method that can either be matched, mapped, filtered, transposed, etc. or implicitly type cast to the underlying **Value**.
+The library leverages the functional concept of **Option**, enabling the return of an `Option` from a method that can either be matched, mapped, filtered, transposed, etc. or implicitly type cast to the underlying `Value`.
 
 ## Key Features
 - **Dual Outcomes**: Facilitates methods to return either a Value or a Failure, encapsulated in `Option` types.
@@ -80,7 +80,7 @@ else
 }
 ```
 
-Or implicitly type convert the Value to int and use a try-catch block to handle potential failures from ProcessAreaCalculation. In case of a failure the exception details contain the Failure value."
+Or implicitly type convert the `Value` to int and use a try-catch block to handle potential failures from **ProcessAreaCalculation**. In case of a failure the exception details contain the `Failure` value."
 
 
 ```csharp
@@ -95,13 +95,13 @@ catch (HasFailedException ex)
     // Handle error based on errorType and errorMessage
 }
 ```
-The try catch (or Option.CatchFailure()) can be as many layers down in the code as you want, the exception will fall thru all the way and still contain the Failure value.
+The try catch (or `Option.CatchFailure()`) can be as many layers down in the code as you want, the exception will fall thru all the way and still contain the `Failure` value.
 
 ## Detailed Explanation
-"ThrowAway" introduces `Option<V>` and `Option<V, F>` structures, with `V` representing the Value type and `F` the Failure type (defaulted to string in `Option<V>`). This design allows methods to return either a value or a reason for failure in a type-safe manner. 
+**ThrowAway** introduces `Option<V>` and `Option<V, F>` structures, with `V` representing the Value type and `F` the Failure type (defaulted to string in `Option<V>`). This design allows methods to return either a value or a reason for failure in a type-safe manner. 
 
 Explicit type casting of an `Option` to its value type simplifies usage, and in cases of failure, it throws a catchable exception. This functionality provides a blend of functional and imperative programming, allowing failures to be handled at the appropriate level in the call stack.
 
 
 ## License
-"ThrowAway" is licensed under the MIT License. This permissive license allows free usage, modification, and distribution, making it suitable for both open-source and commercial applications.
+**ThrowAway** is licensed under the MIT License. This permissive license allows free usage, modification, and distribution, making it suitable for both open-source and commercial applications.
