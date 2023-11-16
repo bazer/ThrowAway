@@ -1,4 +1,4 @@
-## ThrowAway
+# ThrowAway
 **ThrowAway** is a C# library designed to elegantly handle the dichotomy between successful outcomes (`Values`) and error states (`Failures`) in method returns. 
 
 The library leverages the functional concept of **Option**, enabling the return of an `Option` from a method that can either be matched, mapped, filtered, transposed, etc. or implicitly type cast to the underlying `Value`.
