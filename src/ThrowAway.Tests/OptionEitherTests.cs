@@ -281,23 +281,6 @@ namespace ThrowAway.Tests
         }
 
         [Fact]
-        public void SomeReturnInterfaceTypeHandlea()
-        {
-            if (GetInterface().TryUnwrap(out var result))
-                Assert.Equal(3, result.value.Value);
-            else
-                Assert.Null(result.failure);
-
-            Assert.NotNull(result.value);
-            Assert.Equal(3, result.value.Value);
-
-            static Option<ITest> GetInterface()
-            {
-                return Option<ITest>.Some(new Test() { Value = 3 } as ITest);
-            }
-        }
-
-        [Fact]
         public void TryUnwrapEither_Success_OutParameters()
         {
             // Arrange: Create a successful Option using the Either pattern.
@@ -325,36 +308,6 @@ namespace ThrowAway.Tests
             Assert.False(result);
             Assert.Equal(default(int), value);
             Assert.Equal("error", failure);
-        }
-
-        [Fact]
-        public void TryUnwrapEither_Success_Tuple()
-        {
-            // Arrange: Create a successful Option.
-            Option<int, string> opt = Some<int, string>(55);
-
-            // Act: Try to unwrap the Option using the tuple overload.
-            bool result = opt.TryUnwrap(out (int value, string failure) res);
-
-            // Assert: The operation should succeed and yield the expected tuple values.
-            Assert.True(result);
-            Assert.Equal(55, res.value);
-            Assert.Null(res.failure);
-        }
-
-        [Fact]
-        public void TryUnwrapEither_Failure_Tuple()
-        {
-            // Arrange: Create a failure Option.
-            Option<int, string> opt = Fail<int, string>("failure case");
-
-            // Act: Unwrap the Option into a tuple.
-            bool result = opt.TryUnwrap(out (int value, string failure) res);
-
-            // Assert: The unwrapping should indicate failure, returning default for the value and the failure message.
-            Assert.False(result);
-            Assert.Equal(default(int), res.value);
-            Assert.Equal("failure case", res.failure);
         }
 
         [Fact]

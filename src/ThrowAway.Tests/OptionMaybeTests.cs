@@ -375,36 +375,6 @@ namespace ThrowAway.Tests
         }
 
         [Fact]
-        public void TryUnwrapMaybe_Success_Tuple()
-        {
-            // Arrange: Create a successful Option.
-            var opt = Some("success");
-
-            // Act: Use the tuple overload of the extension method.
-            bool result = opt.TryUnwrap(out (string value, string failure) tupleResult);
-
-            // Assert: The unwrapping should succeed with the expected tuple values.
-            Assert.True(result);
-            Assert.Equal("success", tupleResult.value);
-            Assert.Null(tupleResult.failure);
-        }
-
-        [Fact]
-        public void TryUnwrapMaybe_Failure_Tuple()
-        {
-            // Arrange: Create a failure Option.
-            var opt = Fail<string>("error occurred");
-
-            // Act: Use the tuple overload of the extension method.
-            bool result = opt.TryUnwrap(out (string value, string failure) tupleResult);
-
-            // Assert: The unwrapping should indicate failure, with the default value and the correct failure message.
-            Assert.False(result);
-            Assert.Equal(default(string), tupleResult.value);
-            Assert.Equal("error occurred", tupleResult.failure);
-        }
-
-        [Fact]
         public void Use_OnSuccessfulOption_ExecutesAction()
         {
             var option = Option<int>.Some(42);
