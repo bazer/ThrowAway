@@ -58,7 +58,7 @@ public readonly struct Option<V, F>
         ? throw new HasValueException<V>("The option has not failed, it has value", value!)
         : failure;
 
-    private Option([DisallowNull] V value, [DisallowNull] Failure<F> failure, bool hasValue)
+    private Option(V value, Failure<F> failure, bool hasValue)
     {
         this.value = value;
         this.failure = failure;
@@ -70,7 +70,7 @@ public readonly struct Option<V, F>
     /// </summary>
     /// <param name="value">The value to be contained in the Option.</param>
     /// <returns>An Option containing the specified value.</returns>
-    public static Option<V, F> Some([DisallowNull] V value)
+    public static Option<V, F> Some(V value)
     {
         if (IsNull(value))
             throw new ValueIsNullException("'Some' cannot be called with a 'null' value");
@@ -83,7 +83,7 @@ public readonly struct Option<V, F>
     /// </summary>
     /// <param name="failure">The failure type to be contained in the Option.</param>
     /// <returns>An Option indicating the failure with the specified type.</returns>
-    public static Option<V, F> Fail([DisallowNull] F failure)
+    public static Option<V, F> Fail(F failure)
     {
         var fail = new Failure<F>(failure, OptionConfig.LogStackTraceOnFailure
             ? new StackTrace()
@@ -92,7 +92,7 @@ public readonly struct Option<V, F>
         return new Option<V, F>(default!, fail, false);
     }
 
-    internal static Option<V, F> Fail([DisallowNull] F failure, [AllowNull] string? stackTrace)
+    internal static Option<V, F> Fail(F failure, string? stackTrace)
     {
         var fail = new Failure<F>(failure, stackTrace);
 
@@ -145,7 +145,7 @@ public readonly struct Option<V, F>
     /// <returns>An Option&lt;V, F&gt; representing a successful state with the specified value.</returns>
     /// <exception cref="ValueIsNullException">Thrown if the value is null, as null values are not 
     /// allowed for successful Option states.</exception>
-    public static implicit operator Option<V, F>([DisallowNull] V value)
+    public static implicit operator Option<V, F>(V value)
     {
         if (IsNull(value))
             throw new ValueIsNullException("Cannot convert from a 'null' value. 'Null' is not allowed.");
@@ -164,7 +164,7 @@ public readonly struct Option<V, F>
     /// <returns>An Option&lt;V, F&gt; representing a failed state with the specified failure reason.</returns>
     /// <exception cref="ValueIsNullException">Thrown if the failure reason is null, as null values 
     /// are not allowed for failed Option states.</exception>
-    public static implicit operator Option<V, F>([DisallowNull] F failure)
+    public static implicit operator Option<V, F>(F failure)
     {
         if (IsNull(failure))
             throw new ValueIsNullException("Cannot convert from a 'null' value. 'Null' is not allowed.");

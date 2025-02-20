@@ -15,7 +15,7 @@ public static class EitherFailureExtensions
     /// <param name="value">The value to be used for creating the Option.</param>
     /// <param name="failure">The failure to use if the value is null.</param>
     /// <returns>An Option representing success if the value is not null; otherwise, a failure Option.</returns>
-    public static Option<V, F> SomeNotNull<V, F>(this V value, [DisallowNull] F failure) =>
+    public static Option<V, F> SomeNotNull<V, F>(this V value, F failure) =>
         value.SomeWhen(val => val != null, failure);
 
     /// <summary>
@@ -29,7 +29,7 @@ public static class EitherFailureExtensions
     /// <param name="failure">The failure to use if the predicate returns false.</param>
     /// <returns>An Option representing success if the predicate returns true; otherwise, a failure Option.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the predicate is null.</exception>
-    public static Option<V, F> SomeWhen<V, F>(this V value, [DisallowNull] Func<V, bool> predicate, [DisallowNull] F failure)
+    public static Option<V, F> SomeWhen<V, F>(this V value, Func<V, bool> predicate, F failure)
     {
         if (predicate == null)
             throw new ArgumentNullException(nameof(predicate));

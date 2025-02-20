@@ -17,7 +17,7 @@ public class HasFailedException : ThrowAwayException
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     /// <param name="value">The Failure object associated with this exception.</param>
-    public HasFailedException([DisallowNull] string message, [DisallowNull] Failure<object> value) : base($"{message} '{value}'")
+    public HasFailedException(string message, Failure<object> value) : base($"{message} '{value}'")
     {
         if (Helpers.IsNull(message))
             throw new ArgumentNullException(nameof(message));
@@ -41,7 +41,7 @@ public class HasFailedException<F> : HasFailedException
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     /// <param name="failure">The Failure&lt;F&gt; object associated with this exception.</param>
-    public HasFailedException([DisallowNull] string message, [DisallowNull] Failure<F> failure) : base(message, (Failure<object>)failure)
+    public HasFailedException(string message, Failure<F> failure) : base(message, (Failure<object>)failure)
     {
     }
 

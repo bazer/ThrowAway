@@ -23,7 +23,7 @@ public static class EitherMapExtensions
     /// <returns>An Option of type T, F resulting from applying the mapping function to the original Option's value,
     /// if it is in a successful state. If the original Option is in a failed state, returns an Option indicating the failure.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the mapping function is null.</exception>
-    public static Option<T, F> Map<V, F, T>(this Option<V, F> option, [DisallowNull] Func<V, T> mapping)
+    public static Option<T, F> Map<V, F, T>(this Option<V, F> option, Func<V, T> mapping)
     {
         if (IsNull(mapping))
             throw new ArgumentNullException(nameof(mapping));
@@ -46,7 +46,7 @@ public static class EitherMapExtensions
     /// <returns>An Option of type V, T resulting from applying the mapping function to the original Option's failure,
     /// if it is in a failed state. If the original Option is in a successful state, returns the unchanged Option.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the mapping function is null.</exception>
-    public static Option<V, T> MapFail<V, F, T>(this Option<V, F> option, [DisallowNull] Func<F, T> mapping)
+    public static Option<V, T> MapFail<V, F, T>(this Option<V, F> option, Func<F, T> mapping)
     {
         if (IsNull(mapping))
             throw new ArgumentNullException(nameof(mapping));

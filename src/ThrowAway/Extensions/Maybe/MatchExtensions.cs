@@ -23,7 +23,7 @@ public static class MaybeMatchExtensions
     /// <param name="fail">A function to execute if the Option is in a failed state.</param>
     /// <returns>The result of the executed function based on the state of the Option.</returns>
     /// <exception cref="ArgumentNullException">Thrown if either the 'some' or 'fail' function is null.</exception>
-    public static T Match<V, T>(this Option<V> option, [DisallowNull] Func<V, T> some, [DisallowNull] Func<string, T> fail)
+    public static T Match<V, T>(this Option<V> option, Func<V, T> some, Func<string, T> fail)
     {
         if (IsNull(some))
             throw new ArgumentNullException(nameof(some));
@@ -47,7 +47,7 @@ public static class MaybeMatchExtensions
     /// <param name="some">An action to execute if the Option is in a successful state.</param>
     /// <param name="fail">An action to execute if the Option is in a failed state.</param>
     /// <exception cref="ArgumentNullException">Thrown if either the 'some' or 'fail' action is null.</exception>
-    public static void Match<V>(this Option<V> option, [DisallowNull] Action<V> some, [DisallowNull] Action<string> fail)
+    public static void Match<V>(this Option<V> option, Action<V> some, Action<string> fail)
     {
         if (IsNull(some))
             throw new ArgumentNullException(nameof(some));

@@ -17,7 +17,7 @@ public class HasValueException : ThrowAwayException
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     /// <param name="value">The unexpected value associated with this exception.</param>
-    public HasValueException([DisallowNull] string message, [DisallowNull] object value) : base($"{message} '{value}'")
+    public HasValueException(string message, object value) : base($"{message} '{value}'")
     {
         if (Helpers.IsNull(message))
             throw new ArgumentNullException(nameof(message));
@@ -41,7 +41,7 @@ public class HasValueException<T> : HasValueException
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
     /// <param name="value">The unexpected value of type T associated with this exception.</param>
-    public HasValueException([DisallowNull] string message, [DisallowNull] T value) : base(message, value)
+    public HasValueException(string message, T value) : base(message, value!)
     {
     }
 

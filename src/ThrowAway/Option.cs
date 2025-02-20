@@ -29,7 +29,7 @@ public static class Option
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
     /// <param name="value">The non-null value to wrap.</param>
     /// <returns>An Option of the specified type containing the provided value.</returns>
-    public static Option<T> Some<T>([DisallowNull] T value) =>
+    public static Option<T> Some<T>(T value) =>
         Option<T>.Some(value);
 
     /// <summary>
@@ -56,7 +56,7 @@ public static class Option
     /// <typeparam name="F">The failure type of the Option.</typeparam>
     /// <param name="value">The success value.</param>
     /// <returns>An Option with the specified success and failure types.</returns>
-    public static Option<V, F> Some<V, F>([DisallowNull] V value) =>
+    public static Option<V, F> Some<V, F>(V value) =>
         Option<V, F>.Some(value);
 
     /// <summary>
@@ -66,7 +66,7 @@ public static class Option
     /// <typeparam name="F">The failure type of the Option.</typeparam>
     /// <param name="failure">The failure value.</param>
     /// <returns>An Option with the specified success and failure types indicating the failure.</returns>
-    public static Option<V, F> Fail<V, F>([DisallowNull] F failure) =>
+    public static Option<V, F> Fail<V, F>(F failure) =>
         Option<V, F>.Fail(failure);
 
     /// <summary>
@@ -136,9 +136,10 @@ public static class Option
     /// <param name="func">The function to execute.</param>
     /// <param name="exceptionMapping">Mapping of the Exception message to the failure type F</param>
     /// <returns>The result of the function or a failure if an exception occurs.</returns>
-    public static Option<V, F> CatchAll<V, F>(Func<Option<V, F>> func, [DisallowNull] Func<string, F> exceptionMapping)
+    public static Option<V, F> CatchAll<V, F>(Func<Option<V, F>> func, Func<string, F> exceptionMapping)
     {
-        ArgumentNullException.ThrowIfNull(exceptionMapping);
+        if (Helpers.IsNull(exceptionMapping))
+            throw new ArgumentNullException(nameof(exceptionMapping));
 
         try
         {
@@ -150,8 +151,7 @@ public static class Option
         }
         catch (Exception e)
         {
-            var message = exceptionMapping(e.Message);
-            ArgumentNullException.ThrowIfNull(message);
+            var message = exceptionMapping(e.Message ?? "Exception has no message");
 
             return Option<V, F>.Fail(message, e.StackTrace);
         }

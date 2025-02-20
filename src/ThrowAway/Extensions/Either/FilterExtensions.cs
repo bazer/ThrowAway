@@ -19,7 +19,7 @@ public static class EitherFilterExtensions
     /// <returns>An Option that is either the original Option if it is in a failed state or if the value satisfies 
     /// the condition, or a new failed Option with the provided failure reason if the condition is not satisfied.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the condition is null.</exception>
-    public static Option<V, F> Filter<V, F>(this Option<V, F> option, [DisallowNull] Func<V, bool> condition, [DisallowNull] F failure)
+    public static Option<V, F> Filter<V, F>(this Option<V, F> option, Func<V, bool> condition, F failure)
     {
         return option.HasValue && !condition(option.Value)
             ? Option.Fail<V, F>(failure)

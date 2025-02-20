@@ -55,7 +55,7 @@ public readonly struct Option<V>
 
 
 
-    private Option([DisallowNull] V value, Failure<string> failure, bool hasValue)
+    private Option(V value, Failure<string> failure, bool hasValue)
     {
         this.value = value;
         this.failure = failure;
@@ -67,7 +67,7 @@ public readonly struct Option<V>
     /// </summary>
     /// <param name="value">The value to be contained in the Option.</param>
     /// <returns>An Option containing the specified value.</returns>
-    public static Option<V> Some([DisallowNull] V value)
+    public static Option<V> Some(V value)
     {
         if (IsNull(value))
             throw new ValueIsNullException("'Some' cannot be called with a 'null' value");
@@ -80,7 +80,7 @@ public readonly struct Option<V>
     /// </summary>
     /// <param name="reason">The reason for the failure.</param>
     /// <returns>An Option indicating the failure with the specified reason.</returns>
-    public static Option<V> Fail([DisallowNull] string reason)
+    public static Option<V> Fail(string reason)
     {
         var failure = new Failure<string>(reason, OptionConfig.LogStackTraceOnFailure
             ? new StackTrace()
@@ -89,7 +89,7 @@ public readonly struct Option<V>
         return new Option<V>(default!, failure, false);
     }
 
-    internal static Option<V> Fail([DisallowNull] string reason, [AllowNull] string? stackTrace)
+    internal static Option<V> Fail(string reason, string? stackTrace)
     {
         var failure = new Failure<string>(reason, stackTrace);
 
@@ -107,7 +107,7 @@ public readonly struct Option<V>
     /// <returns>An Option of type T resulting from applying the mapping function to the original Option's value,
     /// if it is in a successful state. If the original Option is in a failed state, returns an Option indicating the failure.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the mapping function is null.</exception>
-    public Option<T> FlatMap<T>([DisallowNull] Func<V, Option<T>> mapping)
+    public Option<T> FlatMap<T>(Func<V, Option<T>> mapping)
     {
         if (IsNull(mapping))
             throw new ArgumentNullException(nameof(mapping));
@@ -133,7 +133,7 @@ public readonly struct Option<V>
     /// Converts a value to an Option containing that value.
     /// </summary>
     /// <param name="value">The value to convert to Option.</param>
-    public static implicit operator Option<V>([DisallowNull] V value)
+    public static implicit operator Option<V>(V value)
     {
         if (IsNull(value))
             throw new ValueIsNullException("Cannot convert from a 'null' value. 'Null' is not allowed.");
@@ -145,7 +145,7 @@ public readonly struct Option<V>
     /// Converts a failure reason to an Option indicating failure with that reason.
     /// </summary>
     /// <param name="reason">The failure reason to convert to Option.</param>
-    public static implicit operator Option<V>([DisallowNull] string reason)
+    public static implicit operator Option<V>(string reason)
     {
         if (IsNull(reason))
             throw new ValueIsNullException("Cannot convert from a 'null' value. 'Null' is not allowed.");

@@ -26,7 +26,7 @@ public readonly struct Failure<F>
     /// </summary>
     /// <param name="value">The failure value of type F.</param>
     /// <param name="stackTrace">The optional stack trace associated with the failure.</param>
-    public Failure([DisallowNull] F value, [AllowNull] StackTrace? stackTrace)
+    public Failure(F value, StackTrace? stackTrace)
     {
         if (IsNull(value))
             throw new ArgumentNullException(nameof(value));
@@ -35,7 +35,7 @@ public readonly struct Failure<F>
         StackTrace = stackTrace?.ToString();
     }
 
-    internal Failure([DisallowNull] F value, [AllowNull] string? stackTrace)
+    internal Failure(F value, string? stackTrace)
     {
         if (IsNull(value))
             throw new ArgumentNullException(nameof(value));
