@@ -14,7 +14,7 @@ namespace ThrowAway.Tests
 
             Assert.True(!voidValue.HasFailed);
             Assert.True(voidValue.HasValue);
-            Assert.IsType<VoidResult>(voidValue.Value);
+            Assert.IsType<Unit>(voidValue.Value);
         }
 
         [Fact]

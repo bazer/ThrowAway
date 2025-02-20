@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an empty struct used as a placeholder for void return types in Option.
 /// </summary>
-public struct VoidResult
+public struct Unit
 {
 }
 
@@ -14,14 +14,14 @@ public struct VoidResult
 /// </summary>
 public static class Option
 {
-    private static readonly VoidResult voidValue = new();
+    private static readonly Unit unitValue = new();
 
     /// <summary>
     /// Creates an Option instance representing a void result.
     /// </summary>
-    /// <returns>An Option of VoidResult indicating a successful void operation.</returns>
-    public static Option<VoidResult> Void() =>
-        Some(voidValue);
+    /// <returns>An Option of Unit indicating a successful void operation.</returns>
+    public static Option<Unit> Void() =>
+        Some(unitValue);
 
     /// <summary>
     /// Wraps a non-null value into an Option, indicating a successful operation.
