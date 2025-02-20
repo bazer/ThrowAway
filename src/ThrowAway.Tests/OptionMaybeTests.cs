@@ -403,5 +403,48 @@ namespace ThrowAway.Tests
             Assert.Equal(default(string), tupleResult.value);
             Assert.Equal("error occurred", tupleResult.failure);
         }
+
+        [Fact]
+        public void Use_OnSuccessfulOption_ExecutesAction()
+        {
+            var option = Option<int>.Some(42);
+            int captured = 0;
+
+            option.Use(x => captured = x);
+
+            Assert.Equal(42, captured);
+        }
+
+        [Fact]
+        public void Use_OnFailedOption_DoesNotExecuteAction()
+        {
+            var option = Option<int>.Fail("error");
+            int captured = 0;
+
+            option.Use(x => captured = x);
+
+            Assert.Equal(0, captured); // The action should not run.
+        }
+
+        [Fact]
+        public void SomeWhen_WithPredicateTrue_ReturnsSome()
+        {
+            int value = 10;
+            var option = value.SomeWhen(x => x > 5, "value is too low");
+
+            Assert.True(option.HasValue);
+            Assert.Equal(10, option.Value);
+        }
+
+        [Fact]
+        public void SomeWhen_WithPredicateFalse_ReturnsFail()
+        {
+            int value = 3;
+            var option = value.SomeWhen(x => x > 5, "value is too low");
+
+            Assert.True(option.HasFailed);
+            Assert.Equal("value is too low", option.Failure);
+        }
+
     }
 }

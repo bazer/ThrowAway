@@ -1,4 +1,5 @@
-﻿using ThrowAway.Extensions;
+﻿using System.Collections.Generic;
+using ThrowAway.Extensions;
 using Xunit;
 using static ThrowAway.Option;
 
@@ -247,7 +248,7 @@ namespace ThrowAway.Tests
             static Option<ITest, string> GetInterface()
             {
                 return new Test() { Value = 3 };
-            };
+            }
         }
 
         [Fact]
@@ -261,7 +262,7 @@ namespace ThrowAway.Tests
             static Option<ITest, string> GetInterface()
             {
                 return Option<ITest, string>.Some(new Test() { Value = 3 } as ITest);
-            };
+            }
         }
 
         [Fact]
@@ -276,7 +277,7 @@ namespace ThrowAway.Tests
             static Option<ITest> GetInterface()
             {
                 return Option<ITest>.Some(new Test() { Value = 3 } as ITest);
-            };
+            }
         }
 
         [Fact]
@@ -293,7 +294,7 @@ namespace ThrowAway.Tests
             static Option<ITest> GetInterface()
             {
                 return Option<ITest>.Some(new Test() { Value = 3 } as ITest);
-            };
+            }
         }
 
         [Fact]
@@ -354,6 +355,62 @@ namespace ThrowAway.Tests
             Assert.False(result);
             Assert.Equal(default(int), res.value);
             Assert.Equal("failure case", res.failure);
+        }
+
+        [Fact]
+        public void EitherTranspose_AllSuccessful_ReturnsListOfValues()
+        {
+            var options = new List<Option<int, string>> {
+                Option<int, string>.Some(1),
+                Option<int, string>.Some(2),
+                Option<int, string>.Some(3)
+            };
+
+            var result = options.Transpose();
+
+            Assert.True(result.HasValue);
+            Assert.Equal(new List<int> { 1, 2, 3 }, result.Value);
+        }
+
+        [Fact]
+        public void EitherTranspose_WithFailures_ReturnsListOfFailures()
+        {
+            var options = new List<Option<int, string>> {
+                Option<int, string>.Some(1),
+                Option<int, string>.Fail("error1"),
+                Option<int, string>.Fail("error2")
+            };
+
+            var result = options.Transpose();
+
+            Assert.True(result.HasFailed);
+            Assert.Equal(new List<string> { "error1", "error2" }, result.Failure);
+        }
+
+        [Fact]
+        public void MapFail_TransformsFailureCorrectly()
+        {
+            var option = Option<int, string>.Fail("error");
+            var mapped = option.MapFail(f => f.Length);
+
+            Assert.True(mapped.HasFailed);
+            Assert.Equal(5, mapped.Failure); // "error".Length == 5
+        }
+
+        [Fact]
+        public void ValueOrException_OnFailedOption_ThrowsCustomException()
+        {
+            var option = Option<int, string>.Fail("failure");
+            var ex = Assert.Throws<HasFailedException<string>>(() => option.ValueOrException("Custom error message"));
+            Assert.Contains("Custom error message", ex.Message);
+        }
+
+        [Fact]
+        public void ValueOrException_OnSuccessfulOption_ReturnsValue()
+        {
+            var option = Option<int, string>.Some(100);
+            int value = option.ValueOrException("Should not throw");
+            Assert.Equal(100, value);
         }
     }
 }
