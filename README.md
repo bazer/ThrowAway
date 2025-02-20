@@ -84,7 +84,7 @@ var resultWithAll = Option.CatchAll(() => ProcessData(), errorMsg => $"Custom Er
 
 ## Using TryUnwrap for Seamless Extraction
 
-The `TryUnwrap` extension method lets you extract both the success value and the failure message in one go - without needing extra temporary variables. This method returns a boolean indicating whether the Option holds a value and outputs the value and failure as either separate out parameters or as a tuple.
+The `TryUnwrap` extension method lets you extract both the success value and the failure message in one go - without needing extra temporary variables. This method returns a boolean indicating whether the Option holds a value and outputs the value and failure as separate out parameters.
 
 ```csharp
 if (areaResult.TryUnwrap(out double area, out string failure))
