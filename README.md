@@ -7,7 +7,7 @@
 In many C# applications, error handling is either bogged down by traditional exception logic or forced into a rigid functional style. ThrowAway bridges these two worlds by offering:
 
 - **Explicit Functional Handling:** Model success and failure as first-class citizens with Option types.
-- **Seamless Procedural Integration:** Implicit conversions let you work with Options as if they were plain values�while automatically throwing a `HasFailedException` when an Option is in a failed state. This allows you to mix functional transformations with traditional try-catch error management.
+- **Seamless Procedural Integration:** Implicit conversions let you work with Options as if they were plain values - while automatically throwing a `HasFailedException` when an Option is in a failed state. This allows you to mix functional transformations with traditional try-catch error management.
 
 ## Key Features
 
