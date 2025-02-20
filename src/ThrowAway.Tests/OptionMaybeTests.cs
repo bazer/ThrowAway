@@ -343,5 +343,65 @@ namespace ThrowAway.Tests
 
             OptionConfig.LogStackTraceOnFailure = false;
         }
+
+        [Fact]
+        public void TryUnwrapMaybe_Success_OutParameters()
+        {
+            // Arrange: Create a successful Option (Maybe) instance.
+            var opt = Some(42);
+
+            // Act: Use the extension method to unwrap the value.
+            bool result = opt.TryUnwrap(out int value, out string failure);
+
+            // Assert: The unwrapping should succeed with the correct value and no failure message.
+            Assert.True(result);
+            Assert.Equal(42, value);
+            Assert.Null(failure);
+        }
+
+        [Fact]
+        public void TryUnwrapMaybe_Failure_OutParameters()
+        {
+            // Arrange: Create a failure Option.
+            var opt = Option<int>.Fail("error occurred");
+
+            // Act: Use the extension method to unwrap the Option.
+            bool result = opt.TryUnwrap(out int value, out string failure);
+
+            // Assert: The unwrapping should fail, returning the default value and the failure message.
+            Assert.False(result);
+            Assert.Equal(default(int), value);
+            Assert.Equal("error occurred", failure);
+        }
+
+        [Fact]
+        public void TryUnwrapMaybe_Success_Tuple()
+        {
+            // Arrange: Create a successful Option.
+            var opt = Some("success");
+
+            // Act: Use the tuple overload of the extension method.
+            bool result = opt.TryUnwrap(out (string value, string failure) tupleResult);
+
+            // Assert: The unwrapping should succeed with the expected tuple values.
+            Assert.True(result);
+            Assert.Equal("success", tupleResult.value);
+            Assert.Null(tupleResult.failure);
+        }
+
+        [Fact]
+        public void TryUnwrapMaybe_Failure_Tuple()
+        {
+            // Arrange: Create a failure Option.
+            var opt = Fail<string>("error occurred");
+
+            // Act: Use the tuple overload of the extension method.
+            bool result = opt.TryUnwrap(out (string value, string failure) tupleResult);
+
+            // Assert: The unwrapping should indicate failure, with the default value and the correct failure message.
+            Assert.False(result);
+            Assert.Equal(default(string), tupleResult.value);
+            Assert.Equal("error occurred", tupleResult.failure);
+        }
     }
 }
