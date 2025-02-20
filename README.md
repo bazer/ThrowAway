@@ -1,107 +1,204 @@
 # ThrowAway
-**ThrowAway** is a C# library designed to elegantly handle the dichotomy between successful outcomes (`Values`) and error states (`Failures`) in method returns. 
 
-The library leverages the functional concept of **Option**, enabling the return of an `Option` from a method that can either be matched, mapped, filtered, transposed, etc. or implicitly type cast to the underlying `Value`.
+**ThrowAway** is a pragmatic and efficient C# library that marries functional programming concepts with traditional procedural error handling. It is designed to elegantly manage the dichotomy between successful outcomes (`Values`) and error states (`Failures`) by leveraging the power of the **Option** type. This hybrid approach makes it easy to write expressive, functional code while still integrating seamlessly with conventional try-catch exception handling.
+
+## Overview
+
+In many C# applications, error handling is either bogged down by traditional exception logic or forced into a rigid functional style. ThrowAway bridges these two worlds by offering:
+
+- **Explicit Functional Handling:** Model success and failure as first-class citizens with Option types.
+- **Seamless Procedural Integration:** Implicit conversions let you work with Options as if they were plain values�while automatically throwing a `HasFailedException` when an Option is in a failed state. This allows you to mix functional transformations with traditional try-catch error management.
 
 ## Key Features
-- **Dual Outcomes**: Facilitates methods to return either a Value or a Failure, encapsulated in `Option` types.
-- **Seamless Type Casting**: Implicit type casting of `Option` with a value to its underlying type; throws an exception if it's a Failure, which can be caught and handled elsewhere.
-- **No Nulls Allowed**: Options are struct-based, ensuring an instance can never be null. Disallows nulls for both Value and Failure, enhancing type safety and predictability.
+
+- **Dual Outcomes:** Every operation returns an Option that encapsulates either a valid result (`Value`) or an error (`Failure`).
+- **Implicit Conversions:** Options automatically convert to their underlying type. When an Option represents a failure, an exception is thrown, enabling smooth integration with procedural exception handling.
+- **Rich Functional API:** A suite of extension methods (like `Map`, `FlatMap`, `Match`, `Filter`, `Transpose`, and `Use`) enables chaining and composing operations in a functional style.
+- **No Nulls:** Being struct-based, Options guarantee non-null instances, improving type safety.
+- **Hybrid Error Handling:** Combines the explicitness of functional error handling with the convenience of procedural exception handling.
+- **Robust Exception Wrapping:** Methods like `CatchFailure` and `CatchAll` convert exceptions into failed Options, maintaining consistency in error handling.
+- **Seamless Unwrapping:** `TryUnwrap` lets you extract both the value and the failure message without additional boilerplate.
+
+## Two Flavors: Option (Maybe) vs. Option (Either)
+
+ThrowAway provides two variants of the Option type:
+
+1. **Option (Maybe)**  
+   This variant fixes the failure type to a string. It's ideal when a simple error message suffices.  
+   **Usage Example:**
+   ```csharp
+   // Creating a successful Option (Maybe)
+   Option<int> maybeSuccess = Option.Some(100);
+
+   // Creating a failed Option (Maybe)
+   Option<int> maybeFailure = Option.Fail("Invalid input");
+
+   // Implicit conversion and exception handling:
+   try {
+       int value = maybeSuccess; // Works fine
+   }
+   catch (HasFailedException<string> ex) {
+       Console.WriteLine($"Failure: {ex.Failure}");
+   }
+   ```
+
+2. **Option (Either)**  
+   This variant is generic in its failure type, allowing you to provide richer or more structured error information.  
+   **Usage Example:**
+   ```csharp
+   // Creating a successful Option (Either) with a custom failure type:
+   Option<double, MyError> eitherSuccess = Option.Some<double, MyError>(3.14);
+
+   // Creating a failed Option (Either) with a custom error:
+   Option<double, MyError> eitherFailure = Option.Fail<double, MyError>(new MyError("Calculation error"));
+
+   // Implicit conversion; note that an exception of type HasFailedException<MyError> is thrown on failure:
+   try {
+       double result = eitherSuccess;
+   }
+   catch (HasFailedException<MyError> ex) {
+       Console.WriteLine($"Error: {ex.Failure}");
+   }
+   ```
+
+In the above examples, `MyError` can be any type you define to represent error details, giving you the flexibility to carry structured error information.
+
+## Exception Handling with CatchFailure and CatchAll
+
+ThrowAway offers two powerful methods to encapsulate exception handling within your functional flow:
+
+- **CatchFailure:**  
+  Executes a function that returns an Option. If a `HasFailedException` occurs (i.e., a known failure within the Option chain), it converts the exception into a failed Option.
+
+- **CatchAll:**  
+  This method is more comprehensive. It catches both `HasFailedException` instances and any unexpected exceptions, converting them into a failed Option complete with the exception message and stack trace. This helps maintain a consistent error handling model without the need for manual try-catch blocks around every operation.
+
+**Example:**
+```csharp
+// Using CatchFailure to wrap operations that may throw a HasFailedException
+var result = Option.CatchFailure(() => ProcessData());
+
+// Using CatchAll to capture any exception and convert it into a failure Option
+var resultWithAll = Option.CatchAll(() => ProcessData(), errorMsg => $"Custom Error: {errorMsg}");
+```
+
+## Using TryUnwrap for Seamless Extraction
+
+The `TryUnwrap` extension method lets you extract both the success value and the failure message in one go - without needing extra temporary variables. This method returns a boolean indicating whether the Option holds a value and outputs the value and failure as either separate out parameters or as a tuple.
+
+```csharp
+if (areaResult.TryUnwrap(out double area, out string failure))
+{
+    // Use the value directly.
+    Console.WriteLine($"Area is: {area}");
+}
+else
+{
+    // Handle the failure.
+    Console.WriteLine($"Error calculating area: {failure}");
+}
+```
+
+This feature is especially useful in procedural code, as it eliminates boilerplate and provides immediate access to both outcomes.
 
 ## Installation
 
-Use the following NuGet command:
+Install ThrowAway via NuGet:
 
 ```shell
 dotnet add package ThrowAway
 ```
 
-## Basic examples
-**Utilize Option Types**:
-```csharp
-var successfulOutcome = Option.Some(5);
-var errorOutcome = Option<int>.Fail("Error occurred");
-```
-**Implicit Returns in Methods**:
+## Usage Examples
 
-In this example, imagine a scenario where a method calculates the area of a rectangle. If either of the dimensions is non-positive, it returns a failure message; otherwise, it calculates the area.
+### Basic Option Usage
+
+Handling operations that might succeed or fail is straightforward:
+
+```csharp
+// Option (Maybe) usage:
+var maybeOutcome = Option.Some(5);
+var maybeError = Option.Fail("An error occurred");
+
+// Option (Either) usage:
+var eitherOutcome = Option.Some<int, string>(42);
+var eitherError = Option.Fail<int, string>("Calculation failed");
+```
+
+### Implicit Conversion and Exception Handling
+
+Implicit conversion makes the integration with try-catch blocks seamless:
+
+```csharp
+try
+{
+    int result = Option.Some(10); // Implicitly converts to int.
+    Console.WriteLine($"Result: {result}");
+}
+catch (HasFailedException<string> ex)
+{
+    Console.WriteLine($"Error: {ex.Failure}");
+}
+```
+
+### Combining Functional and Procedural Styles
+
+A typical example where functional chaining meets procedural checks:
+
 ```csharp
 public Option<double> CalculateArea(double length, double width)
 {
-    if (length <= 0 || width <= 0) 
+    if (length <= 0 || width <= 0)
         return "Invalid dimensions provided";
-
+    
     return length * width;
 }
 
 var areaResult = CalculateArea(10, 5);
 if (areaResult.HasFailed)
 {
-    var failureMessage = areaResult.Failure; // "Invalid dimensions provided"
+    Console.WriteLine($"Error: {areaResult.Failure}");
 }
 else
 {
-    var area = areaResult.Value; // 50 (Area of the rectangle)
+    // Implicit conversion to double
+    double area = areaResult;
+    Console.WriteLine($"Area: {area}");
 }
-
 ```
 
-**Exception Handling**:
+### Advanced Functional Operations
 
-Demonstrates the ProcessAreaCalculation method where input strings are safely parsed and area calculation is performed. 
+Chain transformations and error handling with ThrowAway's rich API:
+
 ```csharp
-public Option<int, (AreaError, string)> ProcessAreaCalculation(string lengthInput, string widthInput)
-{
-    if (!double.TryParse(lengthInput, out double length))
-        return (AreaError.InvalidInput, $"Invalid length: {lengthInput}");
-
-    if (!double.TryParse(widthInput, out double width))
-        return (AreaError.InvalidInput, $"Invalid width: {widthInput}");
-
-    return CalculateArea(length, width).Match(
-        area => area > 50 ? 1 : 0, // Check if area is greater than 50
-        failure => (AreaError.CalculationError, failure) // "Invalid dimensions provided"
+var finalResult = Option.Some(5)
+    .Map(x => x * 2)
+    .FlatMap(x => x > 10 
+        ? Option.Some(x.ToString()) 
+        : Option.Fail<string>("Result is too small"))
+    .Match(
+        some: val => $"Success: {val}",
+        fail: err => $"Failure: {err}"
     );
-}
-
-```
-Check for failures and either process the successful result or handle the error, extracting the error type and message
-```csharp
-var processResult = ProcessAreaCalculation("10", "6");
-if (processResult.HasFailed)
-{
-    var (errorType, errorMessage) = processResult.Failure;
-    // Handle error based on errorType and errorMessage
-}
-else
-{
-    var isAreaAboveThreshold = processResult.Value; // 1 if area > 50, else 0
-    // continue with the calculations
-}
+Console.WriteLine(finalResult);
 ```
 
-Or implicitly type convert the `Value` to int and use a try-catch block to handle potential failures from **ProcessAreaCalculation**. In case of a failure the exception details contain the `Failure` value."
+## Why Choose ThrowAway?
 
-
-```csharp
-try
-{
-    int isAreaAboveThreshold = ProcessAreaCalculation("10", "6");
-    // continue with the calculations
-}
-catch (HasFailedException ex)
-{
-    var (errorType, errorMessage) = ex.Failure;
-    // Handle error based on errorType and errorMessage
-}
-```
-The try catch (or `Option.CatchFailure()`) can be as many layers down in the code as you want, the exception will fall thru all the way and still contain the `Failure` value.
-
-## Detailed Explanation
-**ThrowAway** introduces `Option<V>` and `Option<V, F>` structures, with `V` representing the Value type and `F` the Failure type (defaulted to string in `Option<V>`). This design allows methods to return either a value or a reason for failure in a type-safe manner. 
-
-Explicit type casting of an `Option` to its value type simplifies usage, and in cases of failure, it throws a catchable exception. This functionality provides a blend of functional and imperative programming, allowing failures to be handled at the appropriate level in the call stack.
-
+- **Pragmatic Integration:**  
+  Benefit from explicit functional error handling while continuing to use familiar procedural constructs like try-catch.
+- **Clear Code Paths:**  
+  Clearly distinguish between success and failure, making your code easier to understand and maintain.
+- **Eliminate Nulls:**  
+  Struct-based Options guarantee non-null instances, reducing the risk of null-reference errors.
+- **Flexible API:**  
+  Whether you need simple string errors (Option Maybe) or more detailed error types (Option Either), ThrowAway has you covered.
+- **Robust Exception Wrapping:**  
+  CatchFailure and CatchAll methods convert exceptions into failed Options, keeping error handling consistent.
+- **Effortless Unwrapping:**  
+  TryUnwrap simplifies the extraction of values and failures, bridging the gap between functional and procedural paradigms.
 
 ## License
-**ThrowAway** is licensed under the MIT License. This permissive license allows free usage, modification, and distribution, making it suitable for both open-source and commercial applications.
+
+ThrowAway is licensed under the MIT License, making it an open and flexible solution for error handling in both open-source and commercial projects.
